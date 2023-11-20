@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Four Rectangles</title>
+    <style>
+        .con {
+            width: 100vw;
+            height: 100vh;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .road {
+            width: 80%;
+            height: 100%;
+            border: 2px solid black;
+            background-color: aquamarine;
+        }
+
+        canvas {
+            border: 2px solid black;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="con">
+        <div class="road">
+            <canvas class="canvas" width="300" height="500"></canvas>
+        </div>
+    </div>
+    <script>
+       const canvas = document.querySelector(".canvas");
+const ctx = canvas.getContext("2d");
+const rectangles = [];
+
+function getRandomX(){
+   var x= Math.floor(Math.random() * 300); 
+   if(x<100)
+   return 0;
+if(x>100&& x<200)
+return 100;
+if(x>200&& x<300)
+return 200;
+// Random X-coordinate
+}
+
+function createRectangle() {
+    rectangles.push({
+        x: getRandomX(),
+        y: -100, // Start above the canvas
+        speed: Math.random() * 1.5 + 1, // Random speed
+    });
+}
+
+for (let i = 0; i < 3; i++) {
+    createRectangle();
+}
+
+let xx = 0;
+
+function movered({ key }) {
+    switch (key) {
+        case 'ArrowLeft':
+            xx -= 100;
+            break;
+        case 'ArrowRight':
+            xx += 100;
+            break;
+        default:
+            break;
+    }
+}
+
+function arrow(e) {
+    if (e.key.startsWith('Arrow')) {
+        e.preventDefault();
+        movered({ key: e.key });
+    }
+}
+
+function move() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "red";
+    ctx.fillRect(xx, 400, 60, 100);
+
+    rectangles.forEach(rectangle => {
+        if (rectangle.y >= canvas.height) {
+            // Reset the rectangle when it goes below the canvas
+            rectangle.x = getRandomX();
+            rectangle.y = -100; // Start above the canvas
+            rectangle.speed = Math.random() * 2 + 1; // Randomize speed
+        }
+        ctx.fillStyle = "blue"; // Fill color
+        ctx.fillRect(rectangle.x, rectangle.y, 60, 100);
+        rectangle.y += rectangle.speed; // Move the rectangle
+    });
+}
+
+setInterval(move, 5);
+// setInterval(createRectangle, 5000); // Create a new rectangle every 5 seconds
+window.addEventListener("keydown", (e) => arrow(e));
+
+    </script>
+</body>
+
+</html>
